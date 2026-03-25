@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Providers;
-
+use Illuminate\Support\Facades\URL;
 use App\Models\Product;
 use App\Observers\ProductObserver;
 use Illuminate\Support\Facades\Vite;
@@ -9,9 +9,9 @@ use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
+   
+
+
     public function register(): void
     {
         //
@@ -22,6 +22,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        URL::forceScheme('https');
         Vite::prefetch(concurrency: 3);
         Product::observe(ProductObserver::class);
     }
