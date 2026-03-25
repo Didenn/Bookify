@@ -23,6 +23,7 @@ Route::get('/create-admin', function () {
         [
             'name' => 'Admin',
             'password' => Hash::make('12345678'),
+            'role' => 'super_admin', 
         ]
     );
 
