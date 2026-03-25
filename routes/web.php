@@ -17,16 +17,16 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 
+
 Route::get('/create-admin', function () {
-    User::create([
+    $user = User::create([
         'name' => 'Admin',
         'email' => 'superadmin@gmail.com',
         'password' => Hash::make('12345678'),
     ]);
 
-    return 'Admin created';
+    return $user;
 });
-
 
 Route::get('/', function () {
     return Inertia::render('Welcome');
