@@ -1,6 +1,6 @@
 FROM php:8.2-cli
 
-# Install system dependencies including curl for downloading extensions
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -12,13 +12,8 @@ RUN apt-get update && apt-get install -y \
     npm \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install mlocati/php-extension-installer using curl (more reliable than ADD with URL)
-RUN curl -sSLo /usr/local/bin/install-php-extensions \
-        https://github.com/mlocati/php-extension-installer/releases/latest/download/install-php-extensions \
-    && chmod +x /usr/local/bin/install-php-extensions
-
-# Install PHP extensions using pre-built binaries (fast - no source compilation)
-RUN install-php-extensions \
+# Install PHP extensions (no grpc - uses REST transport fallback at runtime)
+RUN docker-php-ext-install \
     pdo \
     pdo_mysql \
     mbstring \
@@ -27,8 +22,7 @@ RUN install-php-extensions \
     bcmath \
     gd \
     zip \
-    opcache \
-    grpc
+    opcache
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -39,7 +33,7 @@ WORKDIR /var/www
 # Copy project files
 COPY . .
 
-# Install PHP dependencies
+# Install PHP dependencies — grpc is not required at install time
 RUN composer install --optimize-autoloader --no-scripts --no-interaction --ignore-platform-req=ext-grpc
 
 # Install Node dependencies and build assets
