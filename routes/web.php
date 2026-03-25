@@ -14,23 +14,20 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
-Route::get('/create-admin', function () {
+Route::get('/fix-admin', function () {
     $user = User::updateOrCreate(
         ['email' => 'superadmin@gmail.com'],
         [
             'name' => 'Admin',
             'password' => Hash::make('12345678'),
-            'role' => 'super_admin', 
+            'role' => 'super_admin',
         ]
     );
 
-    return response()->json([
-        'message' => 'Admin created/updated',
-        'user' => $user
-    ]);
+    return $user;
 });
 
 Route::get('/', function () {
