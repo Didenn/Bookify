@@ -17,15 +17,19 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 
-
 Route::get('/create-admin', function () {
-    $user = User::create([
-        'name' => 'Admin',
-        'email' => 'superadmin@gmail.com',
-        'password' => Hash::make('12345678'),
-    ]);
+    $user = User::updateOrCreate(
+        ['email' => 'superadmin@gmail.com'],
+        [
+            'name' => 'Admin',
+            'password' => Hash::make('12345678'),
+        ]
+    );
 
-    return $user;
+    return response()->json([
+        'message' => 'Admin created/updated',
+        'user' => $user
+    ]);
 });
 
 Route::get('/', function () {
