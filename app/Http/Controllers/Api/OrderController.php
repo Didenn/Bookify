@@ -95,7 +95,9 @@ class OrderController extends Controller
             abort(404);
         }
 
-        $path = 'product_files/' . ltrim($product->upload_file_name, '/');
+        // upload_file_name stores the full relative path (e.g. "product_files/abc.pdf").
+        // Use it directly — no need to reconstruct the folder prefix.
+        $path = ltrim($product->upload_file_name, '/');
         if (! Storage::disk('public')->exists($path)) {
             abort(404);
         }

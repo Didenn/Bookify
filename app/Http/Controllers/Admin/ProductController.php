@@ -100,7 +100,9 @@ class ProductController extends Controller
 
         if ($request->hasFile('product_file')) {
             $storedPath = $request->file('product_file')->storePublicly('product_files', 'public');
-            $validated['upload_file_name'] = basename($storedPath);
+            // Store the full relative path (e.g. "product_files/abc.pdf") so downloads
+            // can use it directly without reconstructing the folder prefix.
+            $validated['upload_file_name'] = $storedPath;
         }
 
         unset($validated['product_file']);
@@ -118,7 +120,8 @@ class ProductController extends Controller
 
     private function serialize(Product $p): array
     {
-        $thumbnailUrl = $p->thumbnail_path ? '/storage/'.ltrim($p->thumbnail_path, '/') : null;
+        // Use asset() so the URL is absolute and correct in all environments (local + Railway).
+        $thumbnailUrl = $p->thumbnail_path ? asset('storage/' . $p->thumbnail_path) : null;
 
         return [
             'id' => $p->id,

@@ -18,8 +18,12 @@ class ProductController extends Controller
                 'category' => $p->category ? $p->category->name : 'Unknown',
                 'price' => $p->price,
                 'description' => $p->description,
+                // Full absolute URL so React Native can display the image from any environment.
                 'image' => $p->thumbnail_path ? asset('storage/' . $p->thumbnail_path) : null,
-                'file' => null,
+                // Full download URL for FILE products; null for LINK products.
+                'file_url' => $p->delivery_type === 'FILE' && $p->upload_file_name
+                    ? url('/api/products/' . $p->id . '/download')
+                    : null,
                 'link' => $p->delivery_type === 'LINK' ? $p->file_link : null,
             ];
         });
